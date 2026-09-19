@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "mobilestore-boilerplate",
-    "slug": "mobilestore-boilerplate",
+    "name": "mobileapp-boilerplate",
+    "slug": "mobileapp-boilerplate",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
