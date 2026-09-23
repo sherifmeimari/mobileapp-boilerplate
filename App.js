@@ -1,7 +1,9 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import * as SecureStore from 'expo-secure-store';
 import { StatusBar } from 'expo-status-bar';
+import * as SplashScreen from 'expo-splash-screen';
 
 import AuthContextProvider, { AuthContext } from './store/auth-context';
 
@@ -69,12 +71,47 @@ function Navigation() {
   );
 }
 
+function Root() {
+  const [finishedTryingLogin, setFinishedTryingLogin] = useState(false);
+  const authCtx = useContext(AuthContext);
+  useEffect(() => {
+    // on App start, we fetch the token (if not expired) from the local storage
+    async function fetchToken() {
+      try {
+        const storedToken = await SecureStore.getItem('token');
+        if (storedToken) {
+          authCtx.authenticate(storedToken);
+        }
+      } catch (e) {
+        console.log(e);
+      } finally {
+        setFinishedTryingLogin(true);
+      }
+    }
+    fetchToken();
+  }, []);
+
+  useEffect(() => {
+    if (finishedTryingLogin) {
+      SplashScreen.hide();
+    }
+  }, [finishedTryingLogin]);
+
+  if (!finishedTryingLogin) {
+    return null;
+  }
+
+  return <Navigation />;
+}
+
 export default function App() {
   return (
     <>
+      {/* since context is provided here in this App component, we cannot change it here
+      workaround to manipulate the context (with useEffect) is to do this in another component -> Root  */}
       <StatusBar style="light" />
       <AuthContextProvider>
-        <Navigation />
+        <Root />
       </AuthContextProvider>
     </>
   );

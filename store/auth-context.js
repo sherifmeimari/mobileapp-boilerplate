@@ -1,4 +1,5 @@
-import { createContext, useState } from 'react';
+import { createContext, useState, useEffect } from 'react';
+import * as SecureStore from 'expo-secure-store';
 
 export const AuthContext = createContext({
   token: '',
@@ -12,10 +13,12 @@ function AuthContextProvider({ children }) {
 
   function authenticate(token) {
     setAuthToken(token);
+    SecureStore.setItemAsync('token', token);
   }
 
   function logout() {
     setAuthToken(null);
+    SecureStore.deleteItemAsync('token');
   }
 
   const value = {
