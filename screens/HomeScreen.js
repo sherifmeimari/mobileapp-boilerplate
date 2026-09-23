@@ -4,7 +4,7 @@ import axios from 'axios';
 
 import { AuthContext } from '../store/auth-context';
 
-function WelcomeScreen() {
+function HomeScreen() {
   const [fetchedMessage, setFetchedMessage] = useState('');
 
   const authCtx = useContext(AuthContext);
@@ -32,7 +32,7 @@ function WelcomeScreen() {
   );
 }
 
-export default WelcomeScreen;
+export default HomeScreen;
 
 const styles = StyleSheet.create({
   rootContainer: {

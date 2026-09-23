@@ -1,19 +1,26 @@
 import { useContext, useEffect, useState } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, useRoute } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import * as SecureStore from 'expo-secure-store';
 import { StatusBar } from 'expo-status-bar';
 import * as SplashScreen from 'expo-splash-screen';
+import { Ionicons } from '@expo/vector-icons';
 
 import AuthContextProvider, { AuthContext } from './store/auth-context';
 
 import LoginScreen from './screens/LoginScreen';
 import SignupScreen from './screens/SignupScreen';
-import WelcomeScreen from './screens/WelcomeScreen';
+import HomeScreen from './screens/HomeScreen';
+import MyAccountScreen from './screens/MyAccountScreen';
+import MyContentScreen from './screens/MyContentScreen';
+import ManageContentModal from './screens/ManageContentModal';
+import ChatScreen from './screens/ChatScreen';
 import { Colors } from './constants/styles';
 import IconButton from './components/ui/IconButton';
 
 const Stack = createNativeStackNavigator();
+const BottomTabs = createBottomTabNavigator();
 
 function AuthStack() {
   return (
@@ -30,11 +37,26 @@ function AuthStack() {
   );
 }
 
-// Not rendered at all initially
-// we wait until we are authenticated to render those screens
-// Screen Protection with AuthContext state
-function AuthenticatedStack() {
-  const authCtx = useContext(AuthContext);
+function MyContent() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="MyContent"
+        component={MyContentScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ManageContent"
+        component={ManageContentModal}
+        options={{
+          presentation: 'modal',
+        }}
+      />
+    </Stack.Navigator>
+  );
+}
+
+function Account() {
   return (
     <Stack.Navigator
       screenOptions={{
@@ -44,20 +66,76 @@ function AuthenticatedStack() {
       }}
     >
       <Stack.Screen
-        name="Welcome"
-        component={WelcomeScreen}
-        options={{
+        name="MyAccount"
+        component={MyAccountScreen}
+        options={({ navigation }) => ({
+          title: 'My Account',
           headerRight: ({ tintColor }) => (
             <IconButton
-              icon="exit"
+              icon="chatbubble-ellipses-outline"
               color={tintColor}
-              size={24}
-              onPress={authCtx.logout}
+              size={22}
+              onPress={() => navigation.navigate('ChatSupport')}
             />
           ),
-        }}
+        })}
+      />
+      <Stack.Screen
+        name="ChatSupport"
+        component={ChatScreen}
+        options={{ title: 'Chat with AI' }}
       />
     </Stack.Navigator>
+  );
+}
+
+// Not rendered at all initially
+// we wait until we are authenticated to render those screens
+// Screen Protection with AuthContext state
+function AuthenticatedStack() {
+  return (
+    <BottomTabs.Navigator>
+      <BottomTabs.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{
+          title: 'Home',
+          tabBarLabel: 'Home',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="home" size={size} color={color} />
+          ),
+          headerStyle: { backgroundColor: Colors.primary500 },
+          headerTintColor: 'white',
+          contentStyle: { backgroundColor: Colors.primary100 },
+        }}
+      />
+      <BottomTabs.Screen
+        name="MyContent"
+        component={MyContent}
+        options={({ navigation }) => ({
+          headerStyle: { backgroundColor: Colors.primary500 },
+          headerTintColor: 'white',
+          contentStyle: { backgroundColor: Colors.primary100 },
+          title: 'My Content',
+          tabBarLabel: 'My Content',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="calendar" size={size} color={color} />
+          ),
+        })}
+      />
+      <BottomTabs.Screen
+        name="MyAccount"
+        component={Account}
+        options={({ navigation }) => ({
+          title: 'My Account',
+          tabBarLabel: 'My Account',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="person" size={size} color={color} />
+          ),
+          headerShown: false,
+        })}
+      />
+    </BottomTabs.Navigator>
   );
 }
 
