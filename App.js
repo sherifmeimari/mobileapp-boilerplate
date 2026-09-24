@@ -192,6 +192,17 @@ function AuthenticatedStack() {
         headerTintColor: 'white',
         tabBarActiveTintColor: Colors.primary500,
         contentStyle: { backgroundColor: Colors.primary100 },
+        // tabBarShowLabel: false,
+        tabBarStyle: {
+          height: 80,
+          paddingTop: 6,
+          paddingBottom: 14,
+        },
+
+        // Make the icon itself larger
+        tabBarIconStyle: {
+          flex: 1,
+        },
       }}
     >
       <BottomTabs.Screen
@@ -199,9 +210,8 @@ function AuthenticatedStack() {
         component={Home}
         options={{
           title: 'Home',
-          tabBarLabel: 'Home',
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="home" size={size} color={color} />
+            <Ionicons name="home" size={32} color={color} />
           ),
           headerShown: false,
         }}
@@ -209,24 +219,22 @@ function AuthenticatedStack() {
       <BottomTabs.Screen
         name="Content"
         component={Content}
-        options={({ navigation }) => ({
+        options={{
           title: 'My Content',
-          tabBarLabel: 'My Content',
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="calendar" size={size} color={color} />
+            <Ionicons name="calendar" size={32} color={color} />
           ),
-        })}
+        }}
       />
       <BottomTabs.Screen
         name="ChatSupport"
         component={ChatScreen}
         options={({ navigation }) => ({
           title: 'Support',
-          tabBarLabel: 'Support',
           tabBarIcon: ({ color, size }) => (
             <Ionicons
               name="chatbubble-ellipses-outline"
-              size={size}
+              size={32}
               color={color}
             />
           ),
@@ -237,9 +245,8 @@ function AuthenticatedStack() {
         component={Account}
         options={{
           title: 'My Account',
-          tabBarLabel: 'My Account',
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="person" size={size} color={color} />
+            <Ionicons name="person" size={32} color={color} />
           ),
           headerShown: false,
         }}
