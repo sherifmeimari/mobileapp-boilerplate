@@ -4,12 +4,17 @@ import Button from '../components/ui/Button';
 
 import { AuthContext } from '../store/auth-context';
 
-function MyAccountScreen() {
+function MyAccountScreen({ navigation }) {
   const authCtx = useContext(AuthContext);
+
+  function handleNavigation() {
+    navigation.navigate('Favorites');
+  }
   return (
     <View style={styles.rootContainer}>
       <Text style={styles.title}>My Account</Text>
       <Button onPress={authCtx.logout}>Logout</Button>
+      <Button onPress={handleNavigation}>Favorites</Button>
     </View>
   );
 }

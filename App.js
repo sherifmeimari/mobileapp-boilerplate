@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { NavigationContainer, useRoute } from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import * as SecureStore from 'expo-secure-store';
@@ -16,6 +16,8 @@ import MyAccountScreen from './screens/MyAccountScreen';
 import MyContentScreen from './screens/MyContentScreen';
 import ManageContentModal from './screens/ManageContentModal';
 import ChatScreen from './screens/ChatScreen';
+import SettingsScreen from './screens/SettingsScreen';
+import FavoritesScreen from './screens/FavoritesScreen';
 import { Colors } from './constants/styles';
 import IconButton from './components/ui/IconButton';
 
@@ -37,9 +39,15 @@ function AuthStack() {
   );
 }
 
-function MyContent() {
+function Content() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: { backgroundColor: Colors.primary500 },
+        headerTintColor: 'white',
+        contentStyle: { backgroundColor: Colors.primary100 },
+      }}
+    >
       <Stack.Screen
         name="MyContent"
         component={MyContentScreen}
@@ -70,20 +78,104 @@ function Account() {
         component={MyAccountScreen}
         options={({ navigation }) => ({
           title: 'My Account',
-          headerRight: ({ tintColor }) => (
-            <IconButton
-              icon="chatbubble-ellipses-outline"
-              color={tintColor}
-              size={22}
-              onPress={() => navigation.navigate('ChatSupport')}
-            />
-          ),
+          unstable_headerRightItems: () => [
+            {
+              type: 'custom',
+              element: (
+                <IconButton
+                  icon="menu"
+                  color="white"
+                  size={28}
+                  onPress={() => navigation.navigate('Settings')}
+                />
+              ),
+              hidesSharedBackground: true,
+            },
+          ],
         })}
       />
       <Stack.Screen
-        name="ChatSupport"
-        component={ChatScreen}
-        options={{ title: 'Chat with AI' }}
+        name="Settings"
+        component={SettingsScreen}
+        options={({ navigation }) => ({
+          title: 'Settings and activity',
+          headerLeftBackgroundVisible: false,
+          unstable_headerLeftItems: () => [
+            {
+              type: 'custom',
+              element: (
+                <IconButton
+                  icon="chevron-back"
+                  color="white"
+                  size={28}
+                  onPress={() => navigation.goBack()}
+                />
+              ),
+              hidesSharedBackground: true,
+            },
+          ],
+        })}
+      />
+      <Stack.Screen
+        name="Favorites"
+        component={FavoritesScreen}
+        options={{ title: 'Favorites', headerLeftBackgroundVisible: false }}
+      />
+    </Stack.Navigator>
+  );
+}
+
+function Home() {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: { backgroundColor: Colors.primary500 },
+        headerTintColor: 'white',
+        contentStyle: { backgroundColor: Colors.primary100 },
+      }}
+    >
+      <Stack.Screen
+        name="MyHome"
+        component={HomeScreen}
+        options={({ navigation }) => ({
+          title: 'Home',
+          unstable_headerRightItems: () => [
+            {
+              type: 'custom',
+              element: (
+                <IconButton
+                  icon="heart-outline"
+                  color="white"
+                  size={28}
+                  onPress={() => navigation.navigate('Favorites')}
+                />
+              ),
+              hidesSharedBackground: true,
+            },
+          ],
+        })}
+      />
+      <Stack.Screen
+        name="Favorites"
+        component={FavoritesScreen}
+        options={({ navigation }) => ({
+          title: 'Favorites',
+          headerLeftBackgroundVisible: false,
+          unstable_headerLeftItems: () => [
+            {
+              type: 'custom',
+              element: (
+                <IconButton
+                  icon="chevron-back"
+                  color="white"
+                  size={28}
+                  onPress={() => navigation.goBack()}
+                />
+              ),
+              hidesSharedBackground: true,
+            },
+          ],
+        })}
       />
     </Stack.Navigator>
   );
@@ -94,28 +186,30 @@ function Account() {
 // Screen Protection with AuthContext state
 function AuthenticatedStack() {
   return (
-    <BottomTabs.Navigator>
+    <BottomTabs.Navigator
+      screenOptions={{
+        headerStyle: { backgroundColor: Colors.primary500 },
+        headerTintColor: 'white',
+        tabBarActiveTintColor: Colors.primary500,
+        contentStyle: { backgroundColor: Colors.primary100 },
+      }}
+    >
       <BottomTabs.Screen
         name="Home"
-        component={HomeScreen}
+        component={Home}
         options={{
           title: 'Home',
           tabBarLabel: 'Home',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="home" size={size} color={color} />
           ),
-          headerStyle: { backgroundColor: Colors.primary500 },
-          headerTintColor: 'white',
-          contentStyle: { backgroundColor: Colors.primary100 },
+          headerShown: false,
         }}
       />
       <BottomTabs.Screen
-        name="MyContent"
-        component={MyContent}
+        name="Content"
+        component={Content}
         options={({ navigation }) => ({
-          headerStyle: { backgroundColor: Colors.primary500 },
-          headerTintColor: 'white',
-          contentStyle: { backgroundColor: Colors.primary100 },
           title: 'My Content',
           tabBarLabel: 'My Content',
           tabBarIcon: ({ color, size }) => (
@@ -124,16 +218,31 @@ function AuthenticatedStack() {
         })}
       />
       <BottomTabs.Screen
-        name="MyAccount"
-        component={Account}
+        name="ChatSupport"
+        component={ChatScreen}
         options={({ navigation }) => ({
+          title: 'Support',
+          tabBarLabel: 'Support',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons
+              name="chatbubble-ellipses-outline"
+              size={size}
+              color={color}
+            />
+          ),
+        })}
+      />
+      <BottomTabs.Screen
+        name="Account"
+        component={Account}
+        options={{
           title: 'My Account',
           tabBarLabel: 'My Account',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="person" size={size} color={color} />
           ),
           headerShown: false,
-        })}
+        }}
       />
     </BottomTabs.Navigator>
   );
