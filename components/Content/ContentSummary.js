@@ -15,7 +15,7 @@ export default ContentSummary;
 const styles = StyleSheet.create({
   container: {
     padding: 8,
-    backgroundColor: Colors.primary500,
+    backgroundColor: Colors.primary800,
     borderRadius: 6,
     flexDirection: 'row',
     justifyContent: 'space-between',

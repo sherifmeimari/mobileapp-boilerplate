@@ -6,12 +6,15 @@ import { AuthContext } from '../store/auth-context';
 import { Colors } from '../constants/styles';
 
 import ContentOutput from '../components/Content/ContentOutput';
+import { ContentContext } from '../store/content-context';
 
 function HomeScreen() {
   const [fetchedMessage, setFetchedMessage] = useState('');
 
   const authCtx = useContext(AuthContext);
   const token = authCtx.token;
+
+  const contentCtx = useContext(ContentContext);
 
   // useEffect(() => {
   //   // depends on the API how we prove we are authenticated
@@ -29,7 +32,10 @@ function HomeScreen() {
 
   return (
     <View style={styles.rootContainer}>
-      <ContentOutput contentCollectionTitle="Most Popular" />
+      <ContentOutput
+        content={contentCtx.content}
+        contentCollectionTitle="Most Popular"
+      />
     </View>
   );
 }

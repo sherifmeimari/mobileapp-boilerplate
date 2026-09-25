@@ -1,18 +1,14 @@
 import { View, Text, StyleSheet } from 'react-native';
-import Button from '../components/ui/Button';
 
-function MyContentScreen({ navigation }) {
+function ContentDetailsScreen({ navigation }) {
   return (
     <View style={styles.rootContainer}>
-      <Text style={styles.title}>My Content</Text>
-      <Button onPress={() => navigation.navigate('ManageContent')}>
-        Add Content
-      </Button>
+      <Text style={styles.title}>Content Details Screen</Text>
     </View>
   );
 }
 
-export default MyContentScreen;
+export default ContentDetailsScreen;
 
 const styles = StyleSheet.create({
   rootContainer: {

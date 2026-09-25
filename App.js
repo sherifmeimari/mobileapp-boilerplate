@@ -13,13 +13,15 @@ import LoginScreen from './screens/LoginScreen';
 import SignupScreen from './screens/SignupScreen';
 import HomeScreen from './screens/HomeScreen';
 import MyAccountScreen from './screens/MyAccountScreen';
-import MyContentScreen from './screens/MyContentScreen';
+import LibraryScreen from './screens/LibraryScreen';
 import ManageContentModal from './screens/ManageContentModal';
 import ChatScreen from './screens/ChatScreen';
 import SettingsScreen from './screens/SettingsScreen';
 import FavoritesScreen from './screens/FavoritesScreen';
+import ContentDetailsScreen from './screens/ContentDetailsScreen';
 import { Colors } from './constants/styles';
 import IconButton from './components/ui/IconButton';
+import ContentContextProvider from './store/content-context';
 
 const Stack = createNativeStackNavigator();
 const BottomTabs = createBottomTabNavigator();
@@ -39,7 +41,7 @@ function AuthStack() {
   );
 }
 
-function Content() {
+function Library() {
   return (
     <Stack.Navigator
       screenOptions={{
@@ -49,16 +51,45 @@ function Content() {
       }}
     >
       <Stack.Screen
-        name="MyContent"
-        component={MyContentScreen}
-        options={{ headerShown: false }}
+        name="Library"
+        component={LibraryScreen}
+        options={({ navigation }) => ({
+          unstable_headerRightItems: () => [
+            {
+              type: 'custom',
+              element: (
+                <IconButton
+                  icon="add"
+                  color="white"
+                  size={28}
+                  onPress={() => navigation.navigate('ManageContent')}
+                />
+              ),
+              hidesSharedBackground: true,
+            },
+          ],
+        })}
       />
       <Stack.Screen
         name="ManageContent"
         component={ManageContentModal}
-        options={{
+        options={({ navigation }) => ({
           presentation: 'modal',
-        }}
+          unstable_headerLeftItems: () => [
+            {
+              type: 'custom',
+              element: (
+                <IconButton
+                  icon="arrow-down-right-box-outline"
+                  color="white"
+                  size={28}
+                  onPress={() => navigation.goBack()}
+                />
+              ),
+              hidesSharedBackground: true,
+            },
+          ],
+        })}
       />
     </Stack.Navigator>
   );
@@ -177,6 +208,28 @@ function Home() {
           ],
         })}
       />
+      <Stack.Screen
+        name="Details"
+        component={ContentDetailsScreen}
+        options={({ navigation }) => ({
+          title: 'Details',
+          headerLeftBackgroundVisible: false,
+          unstable_headerLeftItems: () => [
+            {
+              type: 'custom',
+              element: (
+                <IconButton
+                  icon="chevron-back"
+                  color="white"
+                  size={28}
+                  onPress={() => navigation.goBack()}
+                />
+              ),
+              hidesSharedBackground: true,
+            },
+          ],
+        })}
+      />
     </Stack.Navigator>
   );
 }
@@ -186,72 +239,75 @@ function Home() {
 // Screen Protection with AuthContext state
 function AuthenticatedStack() {
   return (
-    <BottomTabs.Navigator
-      screenOptions={{
-        headerStyle: { backgroundColor: Colors.primary500 },
-        headerTintColor: 'white',
-        tabBarActiveTintColor: Colors.primary500,
-        contentStyle: { backgroundColor: Colors.primary100 },
-        // tabBarShowLabel: false,
-        tabBarStyle: {
-          height: 80,
-          paddingTop: 6,
-          paddingBottom: 14,
-        },
+    <ContentContextProvider>
+      <BottomTabs.Navigator
+        screenOptions={{
+          headerStyle: { backgroundColor: Colors.primary500 },
+          headerTintColor: 'white',
+          tabBarActiveTintColor: Colors.primary500,
+          contentStyle: { backgroundColor: Colors.primary100 },
+          // tabBarShowLabel: false,
+          tabBarStyle: {
+            height: 80,
+            paddingTop: 6,
+            paddingBottom: 14,
+          },
 
-        // Make the icon itself larger
-        tabBarIconStyle: {
-          flex: 1,
-        },
-      }}
-    >
-      <BottomTabs.Screen
-        name="Home"
-        component={Home}
-        options={{
-          title: 'Home',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="home" size={32} color={color} />
-          ),
-          headerShown: false,
+          // Make the icon itself larger
+          tabBarIconStyle: {
+            flex: 1,
+          },
         }}
-      />
-      <BottomTabs.Screen
-        name="Content"
-        component={Content}
-        options={{
-          title: 'My Content',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="calendar" size={32} color={color} />
-          ),
-        }}
-      />
-      <BottomTabs.Screen
-        name="ChatSupport"
-        component={ChatScreen}
-        options={({ navigation }) => ({
-          title: 'Support',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons
-              name="chatbubble-ellipses-outline"
-              size={32}
-              color={color}
-            />
-          ),
-        })}
-      />
-      <BottomTabs.Screen
-        name="Account"
-        component={Account}
-        options={{
-          title: 'My Account',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="person" size={32} color={color} />
-          ),
-          headerShown: false,
-        }}
-      />
-    </BottomTabs.Navigator>
+      >
+        <BottomTabs.Screen
+          name="Home"
+          component={Home}
+          options={{
+            title: 'Home',
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="home" size={32} color={color} />
+            ),
+            headerShown: false,
+          }}
+        />
+        <BottomTabs.Screen
+          name="MyLibrary"
+          component={Library}
+          options={{
+            title: 'My Library',
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="calendar" size={32} color={color} />
+            ),
+            headerShown: false,
+          }}
+        />
+        <BottomTabs.Screen
+          name="ChatSupport"
+          component={ChatScreen}
+          options={({ navigation }) => ({
+            title: 'Support',
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons
+                name="chatbubble-ellipses-outline"
+                size={32}
+                color={color}
+              />
+            ),
+          })}
+        />
+        <BottomTabs.Screen
+          name="Account"
+          component={Account}
+          options={{
+            title: 'My Account',
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="person" size={32} color={color} />
+            ),
+            headerShown: false,
+          }}
+        />
+      </BottomTabs.Navigator>
+    </ContentContextProvider>
   );
 }
 

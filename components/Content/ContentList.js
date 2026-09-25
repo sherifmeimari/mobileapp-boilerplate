@@ -1,7 +1,8 @@
 import { Text, FlatList } from 'react-native';
+import ContentItem from './ContentItem';
 
 function renderItem(itemData) {
-  return <Text>{itemData.item.description}</Text>;
+  return <ContentItem {...itemData.item} />;
 }
 
 function ContentList({ content }) {

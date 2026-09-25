@@ -1,15 +1,14 @@
 import { View, Text, StyleSheet } from 'react-native';
-import { Colors } from '../constants/styles';
 
-function ChatScreen() {
+function LibraryScreen({ navigation }) {
   return (
     <View style={styles.rootContainer}>
-      <Text style={styles.title}>Chat with our agent</Text>
+      <Text style={styles.title}>My Library</Text>
     </View>
   );
 }
 
-export default ChatScreen;
+export default LibraryScreen;
 
 const styles = StyleSheet.create({
   rootContainer: {
@@ -17,7 +16,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 32,
-    backgroundColor: Colors.primary100,
   },
   title: {
     fontSize: 20,
