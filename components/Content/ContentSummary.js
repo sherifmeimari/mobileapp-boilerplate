@@ -1,11 +1,15 @@
 import { View, Text, StyleSheet } from 'react-native';
 import { Colors } from '../../constants/styles';
 
-function ContentSummary({ collectionTitle }) {
+function ContentSummary({ content, periodName }) {
+  const contentSum = content.reduce((sum, contentItem) => {
+    return sum + contentItem.amount;
+  }, 0);
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{collectionTitle}</Text>
-      <Text style={styles.sum}>$177.95</Text>
+      <Text style={styles.period}>{periodName}</Text>
+      <Text style={styles.sum}>${contentSum.toFixed(2)}</Text>
     </View>
   );
 }
@@ -21,7 +25,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  title: {
+  period: {
     fontSize: 12,
     color: Colors.primary100,
   },

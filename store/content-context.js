@@ -11,11 +11,10 @@ export const ContentContext = createContext({
 function contentReducer(state, action) {
   switch (action.type) {
     case 'ADD':
-      // TODO: Update new id creation from database
-      const id = new Date().toString() + Math.random().toString();
       return [{ ...action.payload }, ...state];
     case 'SET':
-      return action.payload;
+      const inverted = action.payload.reverse();
+      return inverted;
     case 'UPDATE':
       const updatableContentItemIndex = state.findIndex(
         (contentItem) => contentItem.id === action.payload.id,
@@ -25,7 +24,8 @@ function contentReducer(state, action) {
         ...updatableContentItem,
         ...action.payload.data,
       };
-      const updatedContent = ([updatableContentItemIndex] = updatedContentItem);
+      const updatedContent = [...state];
+      updatedContent[updatableContentItemIndex] = updatedContentItem;
       return updatedContent;
     case 'DELETE':
       return state.filter((contentItem) => contentItem.id !== action.payload);
@@ -37,7 +37,7 @@ function contentReducer(state, action) {
 function ContentContextProvider({ children }) {
   const [contentState, dispatch] = useReducer(contentReducer, []);
 
-  function addContent({ contentData }) {
+  function addContent(contentData) {
     dispatch({ type: 'ADD', payload: contentData });
   }
 

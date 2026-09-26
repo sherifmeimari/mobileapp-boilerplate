@@ -1,12 +1,15 @@
 import { Pressable, Text, View, StyleSheet } from 'react-native';
 import { Colors } from '../../constants/styles';
+// import { getFormattedDate } from '../../util/date';
 import { useNavigation } from '@react-navigation/native';
 
-function ContentItem({ description, amount, date }) {
+function ContentItem({ id, description, amount, date }) {
   const navigation = useNavigation();
 
   function contentPressHandler() {
-    navigation.navigate('Details');
+    navigation.navigate('ManageContent', {
+      contentItemId: id,
+    });
   }
 
   return (
@@ -19,10 +22,10 @@ function ContentItem({ description, amount, date }) {
           <Text style={[styles.textBase, styles.description]}>
             {description}
           </Text>
-          <Text style={styles.textBase}>{date}</Text>
+          {/* <Text style={styles.textBase}>{date}</Text> */}
         </View>
         <View style={styles.amountContainer}>
-          <Text style={styles.amount}>{amount}</Text>
+          <Text style={styles.amount}>${amount}</Text>
         </View>
       </View>
     </Pressable>

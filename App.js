@@ -17,8 +17,9 @@ import LibraryScreen from './screens/LibraryScreen';
 import ManageContentModal from './screens/ManageContentModal';
 import ChatScreen from './screens/ChatScreen';
 import SettingsScreen from './screens/SettingsScreen';
-import FavoritesScreen from './screens/FavoritesScreen';
+import RecentContentScreen from './screens/RecentContentScreen';
 import ContentDetailsScreen from './screens/ContentDetailsScreen';
+import FavoritesScreen from './screens/FavoritesScreen';
 import { Colors } from './constants/styles';
 import IconButton from './components/ui/IconButton';
 import ContentContextProvider from './store/content-context';
@@ -59,10 +60,10 @@ function Library() {
               type: 'custom',
               element: (
                 <IconButton
-                  icon="add"
+                  icon="heart-outline"
                   color="white"
                   size={28}
-                  onPress={() => navigation.navigate('ManageContent')}
+                  onPress={() => navigation.navigate('Favorites')}
                 />
               ),
               hidesSharedBackground: true,
@@ -71,16 +72,15 @@ function Library() {
         })}
       />
       <Stack.Screen
-        name="ManageContent"
-        component={ManageContentModal}
+        name="Favorites"
+        component={FavoritesScreen}
         options={({ navigation }) => ({
-          presentation: 'modal',
           unstable_headerLeftItems: () => [
             {
               type: 'custom',
               element: (
                 <IconButton
-                  icon="arrow-down-right-box-outline"
+                  icon="chevron-back"
                   color="white"
                   size={28}
                   onPress={() => navigation.goBack()}
@@ -148,9 +148,26 @@ function Account() {
         })}
       />
       <Stack.Screen
-        name="Favorites"
-        component={FavoritesScreen}
-        options={{ title: 'Favorites', headerLeftBackgroundVisible: false }}
+        name="Recent"
+        component={RecentContentScreen}
+        options={{
+          title: 'Recent',
+          headerLeftBackgroundVisible: false,
+          unstable_headerLeftItems: () => [
+            {
+              type: 'custom',
+              element: (
+                <IconButton
+                  icon="chevron-back"
+                  color="white"
+                  size={28}
+                  onPress={() => navigation.goBack()}
+                />
+              ),
+              hidesSharedBackground: true,
+            },
+          ],
+        }}
       />
     </Stack.Navigator>
   );
@@ -170,15 +187,29 @@ function Home() {
         component={HomeScreen}
         options={({ navigation }) => ({
           title: 'Home',
-          unstable_headerRightItems: () => [
+          // unstable_headerRightItems: () => [
+          //   {
+          //     type: 'custom',
+          //     element: (
+          //       <IconButton
+          //         icon="bar-chart"
+          //         color="white"
+          //         size={28}
+          //         onPress={() => navigation.navigate('Recent')}
+          //       />
+          //     ),
+          //     hidesSharedBackground: true,
+          //   },
+          // ],
+          unstable_headerLeftItems: () => [
             {
               type: 'custom',
               element: (
                 <IconButton
-                  icon="heart-outline"
+                  icon="add"
                   color="white"
                   size={28}
-                  onPress={() => navigation.navigate('Favorites')}
+                  onPress={() => navigation.navigate('ManageContent')}
                 />
               ),
               hidesSharedBackground: true,
@@ -186,11 +217,11 @@ function Home() {
           ],
         })}
       />
-      <Stack.Screen
-        name="Favorites"
-        component={FavoritesScreen}
+      {/* <Stack.Screen
+        name="Recent"
+        component={RecentContentScreen}
         options={({ navigation }) => ({
-          title: 'Favorites',
+          title: 'Recent',
           headerLeftBackgroundVisible: false,
           unstable_headerLeftItems: () => [
             {
@@ -198,6 +229,29 @@ function Home() {
               element: (
                 <IconButton
                   icon="chevron-back"
+                  color="white"
+                  size={28}
+                  onPress={() => navigation.goBack()}
+                />
+              ),
+              hidesSharedBackground: true,
+            },
+          ],
+        })}
+      /> */}
+      <Stack.Screen
+        name="ManageContent"
+        component={ManageContentModal}
+        options={({ navigation }) => ({
+          presentation: 'modal',
+          title: 'Recent',
+          headerLeftBackgroundVisible: false,
+          unstable_headerLeftItems: () => [
+            {
+              type: 'custom',
+              element: (
+                <IconButton
+                  icon="arrow-down-right-box-outline"
                   color="white"
                   size={28}
                   onPress={() => navigation.goBack()}
