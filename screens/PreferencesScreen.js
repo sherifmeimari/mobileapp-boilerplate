@@ -1,16 +1,16 @@
 import { useContext, useEffect, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 
-import ContentOutput from '../components/Content/ContentOutput';
-import { ContentContext } from '../store/content-context';
+import PreferencesOutput from '../components/Preferences/PreferencesOutput';
+import { PreferencesContext } from '../store/preferences-context';
 import { AuthContext } from '../store/auth-context';
-import { fetchContent } from '../util/http';
+import { fetchPreferences } from '../util/http';
 import { getDateMinusDays } from '../util/date';
 
 import LoadingOverlay from '../components/ui/LoadingOverlay';
 import ErrorOverlay from '../components/ui/ErrorOverlay';
 
-function RecentContentScreen() {
+function PreferencesScreen() {
   // const [fetchedMessage, setFetchedMessage] = useState('');
   const [isFetching, setIsFetching] = useState(true);
   const [error, setError] = useState();
@@ -22,21 +22,21 @@ function RecentContentScreen() {
   const token = authCtx.token;
 
   // saves us extra http requests and serves as local memory
-  const contentCtx = useContext(ContentContext);
+  const preferencesCtx = useContext(PreferencesContext);
 
   useEffect(() => {
-    async function getContent() {
+    async function getPreferences() {
       // not really needed
       setIsFetching(true);
       try {
-        const content = await fetchContent(token);
-        contentCtx.setContent(content);
+        const preferences = await fetchPreferences(token);
+        preferencesCtx.setPreferences(preferences);
       } catch (error) {
-        setError('Could not fetch content!');
+        setError('Could not fetch preferences!');
       }
       setIsFetching(false);
     }
-    getContent();
+    getPreferences();
   }, [token]);
 
   if (error && !isFetching) {
@@ -47,23 +47,16 @@ function RecentContentScreen() {
     return <LoadingOverlay />;
   }
 
-  const recentContent = contentCtx.content.filter((contentItem) => {
-    const today = new Date();
-    const date7DaysAgo = getDateMinusDays(today, 7);
-
-    return contentItem.date > date7DaysAgo;
-  });
-
   return (
-    <ContentOutput
-      content={recentContent}
-      contentPeriod="Last 7 Days "
-      fallbackText="No content registered for the last 7 days."
+    <PreferencesOutput
+      preferences={preferencesCtx.preferences}
+      preferencesPeriod="Last 7 Days "
+      fallbackText="No preferences registered for the last 7 days."
     />
   );
 }
 
-export default RecentContentScreen;
+export default PreferencesScreen;
 
 const styles = StyleSheet.create({
   rootContainer: {

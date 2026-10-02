@@ -7,7 +7,12 @@ import Button from '../ui/Button';
 // import { getFormattedDate } from '../../util/date';
 import { Colors } from '../../constants/styles';
 
-function ContentForm({ onCancel, onSubmit, submitButtonLabel, defaultValues }) {
+function PreferencesForm({
+  onCancel,
+  onSubmit,
+  submitButtonLabel,
+  defaultValues,
+}) {
   const [inputs, setInputs] = useState({
     amount: {
       value: defaultValues ? defaultValues.amount.toString() : '',
@@ -34,7 +39,7 @@ function ContentForm({ onCancel, onSubmit, submitButtonLabel, defaultValues }) {
   }
 
   function submitHandler() {
-    const contentItemData = {
+    const preferencesItemData = {
       // the + converts the string to a number
       amount: +inputs.amount.value,
       // new Date() converts string to a date if format is written properly
@@ -43,9 +48,10 @@ function ContentForm({ onCancel, onSubmit, submitButtonLabel, defaultValues }) {
     };
 
     const amountIsValid =
-      !isNaN(contentItemData.amount) && contentItemData.amount > 0;
-    const dateIsValid = contentItemData.date.toString() !== 'Invalid Date';
-    const descriptionIsValid = contentItemData.description.trim().length > 0;
+      !isNaN(preferencesItemData.amount) && preferencesItemData.amount > 0;
+    const dateIsValid = preferencesItemData.date.toString() !== 'Invalid Date';
+    const descriptionIsValid =
+      preferencesItemData.description.trim().length > 0;
 
     if (!amountIsValid || !dateIsValid || !descriptionIsValid) {
       setInputs((curInputs) => {
@@ -67,7 +73,7 @@ function ContentForm({ onCancel, onSubmit, submitButtonLabel, defaultValues }) {
       return;
     }
 
-    onSubmit(contentItemData);
+    onSubmit(preferencesItemData);
   }
 
   const formIsInvalid =
@@ -77,7 +83,7 @@ function ContentForm({ onCancel, onSubmit, submitButtonLabel, defaultValues }) {
 
   return (
     <View style={styles.form}>
-      <Text style={styles.title}>Your Content</Text>
+      <Text style={styles.title}>Your Preferences</Text>
       <View style={styles.inputsRow}>
         <Input
           style={styles.rowInput}
@@ -129,7 +135,7 @@ function ContentForm({ onCancel, onSubmit, submitButtonLabel, defaultValues }) {
   );
 }
 
-export default ContentForm;
+export default PreferencesForm;
 
 const styles = StyleSheet.create({
   form: {

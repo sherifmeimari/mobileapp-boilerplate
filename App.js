@@ -14,16 +14,18 @@ import SignupScreen from './screens/SignupScreen';
 import HomeScreen from './screens/HomeScreen';
 import MyAccountScreen from './screens/MyAccountScreen';
 import LibraryScreen from './screens/LibraryScreen';
-import ManageContentModal from './screens/ManageContentModal';
+import ManagePreferencesModal from './screens/ManagePreferencesModal';
+import PreferencesScreen from './screens/PreferencesScreen';
 import ChatScreen from './screens/ChatScreen';
-import SettingsScreen from './screens/SettingsScreen';
-import RecentContentScreen from './screens/RecentContentScreen';
 import ContentDetailsScreen from './screens/ContentDetailsScreen';
 import FavoritesScreen from './screens/FavoritesScreen';
 import { Colors } from './constants/styles';
 import IconButton from './components/ui/IconButton';
-import ContentContextProvider from './store/content-context';
+import PreferencesContextProvider from './store/preferences-context';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useReactQueryDevTools } from '@dev-plugins/react-query';
 
+const queryClient = new QueryClient();
 const Stack = createNativeStackNavigator();
 const BottomTabs = createBottomTabNavigator();
 
@@ -95,6 +97,64 @@ function Library() {
   );
 }
 
+function Preferences() {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: { backgroundColor: Colors.primary500 },
+        headerTintColor: 'white',
+        contentStyle: { backgroundColor: Colors.primary100 },
+      }}
+    >
+      <Stack.Screen
+        name="PreferencesScreen"
+        component={PreferencesScreen}
+        options={({ navigation }) => ({
+          title: 'Settings and Preferences',
+          headerLeftBackgroundVisible: false,
+          unstable_headerLeftItems: () => [
+            {
+              type: 'custom',
+              element: (
+                <IconButton
+                  icon="chevron-back"
+                  color="white"
+                  size={28}
+                  onPress={() => navigation.goBack()}
+                />
+              ),
+              hidesSharedBackground: true,
+            },
+          ],
+        })}
+      />
+      <Stack.Screen
+        name="ManagePreferences"
+        component={ManagePreferencesModal}
+        options={({ navigation }) => ({
+          presentation: 'modal',
+          title: 'Manage Preferences',
+          headerLeftBackgroundVisible: false,
+          unstable_headerLeftItems: () => [
+            {
+              type: 'custom',
+              element: (
+                <IconButton
+                  icon="arrow-down-right-box-outline"
+                  color="white"
+                  size={28}
+                  onPress={() => navigation.goBack()}
+                />
+              ),
+              hidesSharedBackground: true,
+            },
+          ],
+        })}
+      />
+    </Stack.Navigator>
+  );
+}
+
 function Account() {
   return (
     <Stack.Navigator
@@ -117,7 +177,7 @@ function Account() {
                   icon="menu"
                   color="white"
                   size={28}
-                  onPress={() => navigation.navigate('Settings')}
+                  onPress={() => navigation.navigate('Preferences')}
                 />
               ),
               hidesSharedBackground: true,
@@ -126,47 +186,14 @@ function Account() {
         })}
       />
       <Stack.Screen
-        name="Settings"
-        component={SettingsScreen}
-        options={({ navigation }) => ({
-          title: 'Settings and activity',
-          headerLeftBackgroundVisible: false,
-          unstable_headerLeftItems: () => [
-            {
-              type: 'custom',
-              element: (
-                <IconButton
-                  icon="chevron-back"
-                  color="white"
-                  size={28}
-                  onPress={() => navigation.goBack()}
-                />
-              ),
-              hidesSharedBackground: true,
-            },
-          ],
-        })}
-      />
-      <Stack.Screen
-        name="Recent"
-        component={RecentContentScreen}
+        name="Preferences"
+        component={Preferences}
         options={{
-          title: 'Recent',
-          headerLeftBackgroundVisible: false,
-          unstable_headerLeftItems: () => [
-            {
-              type: 'custom',
-              element: (
-                <IconButton
-                  icon="chevron-back"
-                  color="white"
-                  size={28}
-                  onPress={() => navigation.goBack()}
-                />
-              ),
-              hidesSharedBackground: true,
-            },
-          ],
+          title: 'Preferences',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="person" size={32} color={color} />
+          ),
+          headerShown: false,
         }}
       />
     </Stack.Navigator>
@@ -187,79 +214,6 @@ function Home() {
         component={HomeScreen}
         options={({ navigation }) => ({
           title: 'Home',
-          // unstable_headerRightItems: () => [
-          //   {
-          //     type: 'custom',
-          //     element: (
-          //       <IconButton
-          //         icon="bar-chart"
-          //         color="white"
-          //         size={28}
-          //         onPress={() => navigation.navigate('Recent')}
-          //       />
-          //     ),
-          //     hidesSharedBackground: true,
-          //   },
-          // ],
-          unstable_headerLeftItems: () => [
-            {
-              type: 'custom',
-              element: (
-                <IconButton
-                  icon="add"
-                  color="white"
-                  size={28}
-                  onPress={() => navigation.navigate('ManageContent')}
-                />
-              ),
-              hidesSharedBackground: true,
-            },
-          ],
-        })}
-      />
-      {/* <Stack.Screen
-        name="Recent"
-        component={RecentContentScreen}
-        options={({ navigation }) => ({
-          title: 'Recent',
-          headerLeftBackgroundVisible: false,
-          unstable_headerLeftItems: () => [
-            {
-              type: 'custom',
-              element: (
-                <IconButton
-                  icon="chevron-back"
-                  color="white"
-                  size={28}
-                  onPress={() => navigation.goBack()}
-                />
-              ),
-              hidesSharedBackground: true,
-            },
-          ],
-        })}
-      /> */}
-      <Stack.Screen
-        name="ManageContent"
-        component={ManageContentModal}
-        options={({ navigation }) => ({
-          presentation: 'modal',
-          title: 'Recent',
-          headerLeftBackgroundVisible: false,
-          unstable_headerLeftItems: () => [
-            {
-              type: 'custom',
-              element: (
-                <IconButton
-                  icon="arrow-down-right-box-outline"
-                  color="white"
-                  size={28}
-                  onPress={() => navigation.goBack()}
-                />
-              ),
-              hidesSharedBackground: true,
-            },
-          ],
         })}
       />
       <Stack.Screen
@@ -293,7 +247,7 @@ function Home() {
 // Screen Protection with AuthContext state
 function AuthenticatedStack() {
   return (
-    <ContentContextProvider>
+    <PreferencesContextProvider>
       <BottomTabs.Navigator
         screenOptions={{
           headerStyle: { backgroundColor: Colors.primary500 },
@@ -361,7 +315,7 @@ function AuthenticatedStack() {
           }}
         />
       </BottomTabs.Navigator>
-    </ContentContextProvider>
+    </PreferencesContextProvider>
   );
 }
 
@@ -409,14 +363,17 @@ function Root() {
 }
 
 export default function App() {
+  useReactQueryDevTools(queryClient);
   return (
     <>
       {/* since context is provided here in this App component, we cannot change it here
       workaround to manipulate the context (with useEffect) is to do this in another component -> Root  */}
       <StatusBar style="light" />
-      <AuthContextProvider>
-        <Root />
-      </AuthContextProvider>
+      <QueryClientProvider client={queryClient}>
+        <AuthContextProvider>
+          <Root />
+        </AuthContextProvider>
+      </QueryClientProvider>
     </>
   );
 }

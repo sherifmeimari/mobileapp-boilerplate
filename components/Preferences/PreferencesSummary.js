@@ -1,20 +1,20 @@
 import { View, Text, StyleSheet } from 'react-native';
 import { Colors } from '../../constants/styles';
 
-function ContentSummary({ content, periodName }) {
-  const contentSum = content.reduce((sum, contentItem) => {
-    return sum + contentItem.amount;
+function PreferencesSummary({ preferences, periodName }) {
+  const PreferencesSum = preferences.reduce((sum, preference) => {
+    return sum + preference.amount;
   }, 0);
 
   return (
     <View style={styles.container}>
       <Text style={styles.period}>{periodName}</Text>
-      <Text style={styles.sum}>${contentSum.toFixed(2)}</Text>
+      <Text style={styles.sum}>${PreferencesSum.toFixed(2)}</Text>
     </View>
   );
 }
 
-export default ContentSummary;
+export default PreferencesSummary;
 
 const styles = StyleSheet.create({
   container: {

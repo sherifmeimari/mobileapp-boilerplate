@@ -3,21 +3,21 @@ import { Colors } from '../../constants/styles';
 // import { getFormattedDate } from '../../util/date';
 import { useNavigation } from '@react-navigation/native';
 
-function ContentItem({ id, description, amount, date }) {
+function PreferencesItem({ id, description, amount, date }) {
   const navigation = useNavigation();
 
-  function contentPressHandler() {
-    navigation.navigate('ManageContent', {
-      contentItemId: id,
+  function PreferencesPressHandler() {
+    navigation.navigate('ManagePreferences', {
+      preferencesItemId: id,
     });
   }
 
   return (
     <Pressable
-      onPress={contentPressHandler}
+      onPress={PreferencesPressHandler}
       style={({ pressed }) => pressed && styles.pressed}
     >
-      <View style={styles.contentItem}>
+      <View style={styles.preferencesItem}>
         <View>
           <Text style={[styles.textBase, styles.description]}>
             {description}
@@ -32,13 +32,13 @@ function ContentItem({ id, description, amount, date }) {
   );
 }
 
-export default ContentItem;
+export default PreferencesItem;
 
 const styles = StyleSheet.create({
   pressed: {
     opacity: 0.75,
   },
-  contentItem: {
+  preferencesItem: {
     padding: 12,
     marginVertical: 8,
     backgroundColor: Colors.primary500,

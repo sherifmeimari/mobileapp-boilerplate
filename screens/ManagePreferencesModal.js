@@ -3,42 +3,46 @@ import { View, TextInput, StyleSheet } from 'react-native';
 
 import IconButton from '../components/ui/IconButton';
 import Button from '../components/ui/Button';
-import ContentForm from '../components/ManageContent/ContentForm';
+import PreferencesForm from '../components/ManagePreferences/PreferencesForm';
 import { Colors } from '../constants/styles';
 
-import { ContentContext } from '../store/content-context';
-import { storeContent, updateContent, deleteContent } from '../util/http';
+import { PreferencesContext } from '../store/preferences-context';
+import {
+  storePreferences,
+  updatePreferences,
+  deletePreferences,
+} from '../util/http';
 import LoadingOverlay from '../components/ui/LoadingOverlay';
 import ErrorOverlay from '../components/ui/ErrorOverlay';
 
-function ManageContentModal({ route, navigation }) {
+function ManagePreferencesModal({ route, navigation }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState();
-  const contentCtx = useContext(ContentContext);
+  const preferencesCtx = useContext(PreferencesContext);
   // route.params might be undefined
-  const editedContentItemId = route.params?.contentItemId;
+  const editedPreferenceId = route.params?.preferencesItemId;
   // !! is a trick to convert into a boolean
-  const isEditing = !!editedContentItemId;
+  const isEditing = !!editedPreferenceId;
 
-  const selectedContentItem = contentCtx.content.find(
-    (contentItem) => contentItem.id === editedContentItemId,
+  const selectedPreferenceItem = preferencesCtx.preferences.find(
+    (preferenceItem) => preferenceItem.id === editedPreferenceId,
   );
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: isEditing ? 'Edit Content' : 'Add Content',
+      title: isEditing ? 'Edit Preference' : 'Add Preference',
     });
   }, [navigation, isEditing]);
 
-  async function deleteContentHandler() {
+  async function deletePreferencesHandler() {
     setIsSubmitting(true);
     try {
-      await deleteContent(editedContentItemId);
+      await deletePreferences(editedPreferenceId);
       setIsSubmitting(false);
-      contentCtx.deleteContent(editedContentItemId);
+      preferencesCtx.deletePreferences(editedPreferenceId);
       navigation.goBack();
     } catch (error) {
-      setError('Could not delete content - please try again later!');
+      setError('Could not delete preference - please try again later!');
       setIsSubmitting(false);
     }
   }
@@ -51,11 +55,11 @@ function ManageContentModal({ route, navigation }) {
     setIsSubmitting(true);
     try {
       if (isEditing) {
-        contentCtx.updateContent(editedContentItemId, contentData);
-        await updateContent(editedContentItemId, contentData);
+        preferencesCtx.updatePreferences(editedPreferenceId, contentData);
+        await updatePreferences(editedPreferenceId, contentData);
       } else {
-        const id = await storeContent(contentData);
-        contentCtx.addContent({ ...contentData, id: id });
+        const id = await storePreferences(contentData);
+        preferencesCtx.addPreference({ ...contentData, id: id });
       }
       setIsSubmitting(false);
       navigation.goBack();
@@ -75,11 +79,11 @@ function ManageContentModal({ route, navigation }) {
 
   return (
     <View style={styles.container}>
-      <ContentForm
+      <PreferencesForm
         submitButtonLabel={isEditing ? 'Update' : 'Add'}
         onSubmit={confirmHandler}
         onCancel={cancelHandler}
-        defaultValues={selectedContentItem}
+        defaultValues={selectedPreferenceItem}
       />
       {isEditing && (
         <View style={styles.deleteContainer}>
@@ -87,7 +91,7 @@ function ManageContentModal({ route, navigation }) {
             icon="trash"
             color={Colors.error500}
             size={36}
-            onPress={deleteContentHandler}
+            onPress={deletePreferencesHandler}
           />
         </View>
       )}
@@ -95,7 +99,7 @@ function ManageContentModal({ route, navigation }) {
   );
 }
 
-export default ManageContentModal;
+export default ManagePreferencesModal;
 
 const styles = StyleSheet.create({
   container: {
