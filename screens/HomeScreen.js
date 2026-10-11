@@ -4,6 +4,8 @@ import { fetchProducts } from '../util/http';
 import LoadingOverlay from '../components/ui/LoadingOverlay';
 import ErrorOverlay from '../components/ui/ErrorOverlay';
 
+import { Colors } from '../constants/styles';
+
 import { useQuery } from '@tanstack/react-query';
 
 function HomeScreen() {
@@ -46,19 +48,6 @@ function HomeScreen() {
                   {item.variants.edges[0]?.node.price.currencyCode}
                 </Text>
               </View>
-
-              {/* <TouchableOpacity
-                style={[
-                  styles.button,
-                  isCheckoutLoading && styles.buttonDisabled,
-                ]}
-                onPress={() => handleAddToCart(item)}
-                disabled={isCheckoutLoading}
-              >
-                <Text style={styles.buttonText}>
-                  {isCheckoutLoading ? 'Opening...' : 'Add to Cart'}
-                </Text>
-              </TouchableOpacity> */}
             </View>
           );
         }}
@@ -72,6 +61,7 @@ export default HomeScreen;
 const styles = StyleSheet.create({
   rootContainer: {
     flex: 1,
+    backgroundColor: Colors.primary100,
   },
   centered: {
     flex: 1,

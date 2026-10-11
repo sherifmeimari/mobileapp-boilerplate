@@ -13,7 +13,6 @@ import LoginScreen from './screens/LoginScreen';
 import SignupScreen from './screens/SignupScreen';
 import HomeScreen from './screens/HomeScreen';
 import MyAccountScreen from './screens/MyAccountScreen';
-import LibraryScreen from './screens/LibraryScreen';
 import ManagePreferencesModal from './screens/ManagePreferencesModal';
 import PreferencesScreen from './screens/PreferencesScreen';
 import ChatsScreen from './screens/ChatsScreen';
@@ -47,257 +46,84 @@ function AuthStack() {
   );
 }
 
-function Search() {
+function BottomTabsNavigator() {
   return (
-    <Stack.Navigator
+    <BottomTabs.Navigator
       screenOptions={{
         headerStyle: { backgroundColor: Colors.primary500 },
         headerTintColor: 'white',
+        tabBarActiveTintColor: Colors.primary500,
         contentStyle: { backgroundColor: Colors.primary100 },
+        // tabBarShowLabel: false,
+        tabBarStyle: {
+          height: 80,
+          paddingTop: 6,
+          paddingBottom: 14,
+        },
+
+        // Make the icon itself larger
+        tabBarIconStyle: {
+          flex: 1,
+        },
       }}
     >
-      <Stack.Screen
+      <BottomTabs.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{
+          title: 'Home',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="home" size={32} color={color} />
+          ),
+        }}
+      />
+      <BottomTabs.Screen
         name="Search"
         component={SearchScreen}
         options={({ navigation }) => ({
-          unstable_headerRightItems: () => [
-            {
-              type: 'custom',
-              element: (
-                <IconButton
-                  icon="bookmark-outline"
-                  color="white"
-                  size={28}
-                  onPress={() => navigation.navigate('Saved')}
-                />
-              ),
-              hidesSharedBackground: true,
-            },
-          ],
+          title: 'Search',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="search" size={32} color={color} />
+          ),
+          headerRight: ({ tintColor }) => (
+            <IconButton
+              icon="bookmark-outline"
+              size={24}
+              color={tintColor}
+              onPress={() => navigation.navigate('Saved')}
+            />
+          ),
         })}
       />
-      <Stack.Screen
-        name="Saved"
-        component={SavedScreen}
-        options={({ navigation }) => ({
-          unstable_headerLeftItems: () => [
-            {
-              type: 'custom',
-              element: (
-                <IconButton
-                  icon="chevron-back"
-                  color="white"
-                  size={28}
-                  onPress={() => navigation.goBack()}
-                />
-              ),
-              hidesSharedBackground: true,
-            },
-          ],
-        })}
+      <BottomTabs.Screen
+        name="Chats"
+        component={ChatsScreen}
+        options={{
+          title: 'Chats',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="send" size={32} color={color} />
+          ),
+        }}
       />
-    </Stack.Navigator>
-  );
-}
-
-function Chats() {
-  return (
-    <Stack.Navigator
-      screenOptions={{
-        headerStyle: { backgroundColor: Colors.primary500 },
-        headerTintColor: 'white',
-        contentStyle: { backgroundColor: Colors.primary100 },
-      }}
-    >
-      <Stack.Screen name="Chats" component={ChatsScreen} />
-      <Stack.Screen
-        name="Chat"
-        component={ChatScreen}
-        options={({ navigation }) => ({
-          unstable_headerLeftItems: () => [
-            {
-              type: 'custom',
-              element: (
-                <IconButton
-                  icon="chevron-back"
-                  color="white"
-                  size={28}
-                  onPress={() => navigation.goBack()}
-                />
-              ),
-              hidesSharedBackground: true,
-            },
-          ],
-        })}
-      />
-    </Stack.Navigator>
-  );
-}
-
-function Preferences() {
-  return (
-    <Stack.Navigator
-      screenOptions={{
-        headerStyle: { backgroundColor: Colors.primary500 },
-        headerTintColor: 'white',
-        contentStyle: { backgroundColor: Colors.primary100 },
-      }}
-    >
-      <Stack.Screen
-        name="PreferencesScreen"
-        component={PreferencesScreen}
-        options={({ navigation }) => ({
-          title: 'Settings and Preferences',
-          headerLeftBackgroundVisible: false,
-          unstable_headerLeftItems: () => [
-            {
-              type: 'custom',
-              element: (
-                <IconButton
-                  icon="chevron-back"
-                  color="white"
-                  size={28}
-                  onPress={() => navigation.goBack()}
-                />
-              ),
-              hidesSharedBackground: true,
-            },
-          ],
-        })}
-      />
-      <Stack.Screen
-        name="ManagePreferences"
-        component={ManagePreferencesModal}
-        options={({ navigation }) => ({
-          presentation: 'modal',
-          title: 'Manage Preferences',
-          headerLeftBackgroundVisible: false,
-          unstable_headerLeftItems: () => [
-            {
-              type: 'custom',
-              element: (
-                <IconButton
-                  icon="arrow-down-right-box-outline"
-                  color="white"
-                  size={28}
-                  onPress={() => navigation.goBack()}
-                />
-              ),
-              hidesSharedBackground: true,
-            },
-          ],
-        })}
-      />
-    </Stack.Navigator>
-  );
-}
-
-function Account() {
-  return (
-    <Stack.Navigator
-      screenOptions={{
-        headerStyle: { backgroundColor: Colors.primary500 },
-        headerTintColor: 'white',
-        contentStyle: { backgroundColor: Colors.primary100 },
-      }}
-    >
-      <Stack.Screen
-        name="MyAccount"
+      <BottomTabs.Screen
+        name="Account"
         component={MyAccountScreen}
         options={({ navigation }) => ({
           title: 'My Account',
-          unstable_headerRightItems: () => [
-            {
-              type: 'custom',
-              element: (
-                <IconButton
-                  icon="menu"
-                  color="white"
-                  size={28}
-                  onPress={() => navigation.navigate('Preferences')}
-                />
-              ),
-              hidesSharedBackground: true,
-            },
-          ],
-        })}
-      />
-      <Stack.Screen
-        name="Preferences"
-        component={Preferences}
-        options={{
-          title: 'Preferences',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="person" size={32} color={color} />
           ),
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen
-        name="Favorites"
-        component={FavoritesScreen}
-        options={({ navigation }) => ({
-          title: 'Favorites',
-          headerLeftBackgroundVisible: false,
-          unstable_headerLeftItems: () => [
-            {
-              type: 'custom',
-              element: (
-                <IconButton
-                  icon="chevron-back"
-                  color="white"
-                  size={28}
-                  onPress={() => navigation.goBack()}
-                />
-              ),
-              hidesSharedBackground: true,
-            },
-          ],
+          headerRight: ({ tintColor }) => (
+            <IconButton
+              icon="menu"
+              size={24}
+              color={tintColor}
+              onPress={() => navigation.navigate('Preferences')}
+            />
+          ),
         })}
       />
-    </Stack.Navigator>
-  );
-}
-
-function Home() {
-  return (
-    <Stack.Navigator
-      screenOptions={{
-        headerStyle: { backgroundColor: Colors.primary500 },
-        headerTintColor: 'white',
-        contentStyle: { backgroundColor: Colors.primary100 },
-      }}
-    >
-      <Stack.Screen
-        name="MyHome"
-        component={HomeScreen}
-        options={({ navigation }) => ({
-          title: 'Home',
-        })}
-      />
-      <Stack.Screen
-        name="Details"
-        component={ContentDetailsScreen}
-        options={({ navigation }) => ({
-          title: 'Details',
-          headerLeftBackgroundVisible: false,
-          unstable_headerLeftItems: () => [
-            {
-              type: 'custom',
-              element: (
-                <IconButton
-                  icon="chevron-back"
-                  color="white"
-                  size={28}
-                  onPress={() => navigation.goBack()}
-                />
-              ),
-              hidesSharedBackground: true,
-            },
-          ],
-        })}
-      />
-    </Stack.Navigator>
+    </BottomTabs.Navigator>
   );
 }
 
@@ -307,70 +133,168 @@ function Home() {
 function AuthenticatedStack() {
   return (
     <PreferencesContextProvider>
-      <BottomTabs.Navigator
+      <Stack.Navigator
         screenOptions={{
           headerStyle: { backgroundColor: Colors.primary500 },
           headerTintColor: 'white',
-          tabBarActiveTintColor: Colors.primary500,
           contentStyle: { backgroundColor: Colors.primary100 },
-          // tabBarShowLabel: false,
-          tabBarStyle: {
-            height: 80,
-            paddingTop: 6,
-            paddingBottom: 14,
-          },
-
-          // Make the icon itself larger
-          tabBarIconStyle: {
-            flex: 1,
-          },
         }}
       >
-        <BottomTabs.Screen
-          name="Home"
-          component={Home}
-          options={{
-            title: 'Home',
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="home" size={32} color={color} />
-            ),
-            headerShown: false,
-          }}
+        <Stack.Screen
+          name="BottomTabs"
+          component={BottomTabsNavigator}
+          options={{ headerShown: false }}
         />
-        <BottomTabs.Screen
-          name="Search"
-          component={Search}
-          options={{
-            title: 'Search',
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="search" size={32} color={color} />
-            ),
-            headerShown: false,
-          }}
+        <Stack.Screen
+          name="Details"
+          component={ContentDetailsScreen}
+          options={({ navigation }) => ({
+            title: 'Details',
+            headerLeftBackgroundVisible: false,
+            unstable_headerLeftItems: () => [
+              {
+                type: 'custom',
+                element: (
+                  <IconButton
+                    icon="chevron-back"
+                    color="white"
+                    size={28}
+                    onPress={() => navigation.goBack()}
+                  />
+                ),
+                hidesSharedBackground: true,
+              },
+            ],
+          })}
         />
-        <BottomTabs.Screen
-          name="Chats"
-          component={Chats}
-          options={{
-            title: 'Chats',
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="send" size={32} color={color} />
-            ),
-            headerShown: false,
-          }}
+        <Stack.Screen
+          name="Saved"
+          component={SavedScreen}
+          options={({ navigation }) => ({
+            unstable_headerLeftItems: () => [
+              {
+                type: 'custom',
+                element: (
+                  <IconButton
+                    icon="chevron-back"
+                    color="white"
+                    size={28}
+                    onPress={() => navigation.goBack()}
+                  />
+                ),
+                hidesSharedBackground: true,
+              },
+            ],
+          })}
         />
-        <BottomTabs.Screen
-          name="Account"
-          component={Account}
-          options={{
-            title: 'My Account',
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="person" size={32} color={color} />
-            ),
-            headerShown: false,
-          }}
+        <Stack.Screen
+          name="Chat"
+          component={ChatScreen}
+          options={({ navigation }) => ({
+            unstable_headerLeftItems: () => [
+              {
+                type: 'custom',
+                element: (
+                  <IconButton
+                    icon="chevron-back"
+                    color="white"
+                    size={28}
+                    onPress={() => navigation.goBack()}
+                  />
+                ),
+                hidesSharedBackground: true,
+              },
+            ],
+          })}
         />
-      </BottomTabs.Navigator>
+        <Stack.Screen
+          name="Preferences"
+          component={PreferencesScreen}
+          options={({ navigation }) => ({
+            unstable_headerLeftItems: () => [
+              {
+                type: 'custom',
+                element: (
+                  <IconButton
+                    icon="chevron-back"
+                    color="white"
+                    size={28}
+                    onPress={() => navigation.goBack()}
+                  />
+                ),
+                hidesSharedBackground: true,
+              },
+            ],
+          })}
+        />
+        <Stack.Screen
+          name="Favorites"
+          component={FavoritesScreen}
+          options={({ navigation }) => ({
+            title: 'Favorites',
+            headerLeftBackgroundVisible: false,
+            unstable_headerLeftItems: () => [
+              {
+                type: 'custom',
+                element: (
+                  <IconButton
+                    icon="chevron-back"
+                    color="white"
+                    size={28}
+                    onPress={() => navigation.goBack()}
+                  />
+                ),
+                hidesSharedBackground: true,
+              },
+            ],
+          })}
+        />
+        <Stack.Screen
+          name="ManagePreferences"
+          component={ManagePreferencesModal}
+          options={({ navigation }) => ({
+            presentation: 'modal',
+            title: 'Manage Preferences',
+            headerLeftBackgroundVisible: false,
+            unstable_headerLeftItems: () => [
+              {
+                type: 'custom',
+                element: (
+                  <IconButton
+                    icon="arrow-down-right-box-outline"
+                    color="white"
+                    size={28}
+                    onPress={() => navigation.goBack()}
+                  />
+                ),
+                hidesSharedBackground: true,
+              },
+            ],
+          })}
+        />
+        <Stack.Screen
+          name="DetailsScreen"
+          component={ContentDetailsScreen}
+          options={({ navigation }) => ({
+            title: 'Details',
+            headerLeftBackgroundVisible: false,
+            unstable_headerLeftItems: () => [
+              {
+                type: 'custom',
+                element: (
+                  <IconButton
+                    icon="chevron-back"
+                    color="white"
+                    size={28}
+                    onPress={() => navigation.goBack()}
+                  />
+                ),
+                hidesSharedBackground: true,
+              },
+            ],
+          })}
+        />
+      </Stack.Navigator>
     </PreferencesContextProvider>
   );
 }

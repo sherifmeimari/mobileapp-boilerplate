@@ -38,6 +38,7 @@ export default MyAccountScreen;
 const styles = StyleSheet.create({
   rootContainer: {
     flex: 1,
+    backgroundColor: Colors.primary100,
   },
   itemContainer: {
     padding: 10,
