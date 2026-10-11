@@ -16,9 +16,12 @@ import MyAccountScreen from './screens/MyAccountScreen';
 import LibraryScreen from './screens/LibraryScreen';
 import ManagePreferencesModal from './screens/ManagePreferencesModal';
 import PreferencesScreen from './screens/PreferencesScreen';
+import ChatsScreen from './screens/ChatsScreen';
 import ChatScreen from './screens/ChatScreen';
 import ContentDetailsScreen from './screens/ContentDetailsScreen';
 import FavoritesScreen from './screens/FavoritesScreen';
+import SearchScreen from './screens/SearchScreen';
+import SavedScreen from './screens/SavedScreen';
 import { Colors } from './constants/styles';
 import IconButton from './components/ui/IconButton';
 import PreferencesContextProvider from './store/preferences-context';
@@ -44,7 +47,7 @@ function AuthStack() {
   );
 }
 
-function Library() {
+function Search() {
   return (
     <Stack.Navigator
       screenOptions={{
@@ -54,18 +57,18 @@ function Library() {
       }}
     >
       <Stack.Screen
-        name="Library"
-        component={LibraryScreen}
+        name="Search"
+        component={SearchScreen}
         options={({ navigation }) => ({
           unstable_headerRightItems: () => [
             {
               type: 'custom',
               element: (
                 <IconButton
-                  icon="heart-outline"
+                  icon="bookmark-outline"
                   color="white"
                   size={28}
-                  onPress={() => navigation.navigate('Favorites')}
+                  onPress={() => navigation.navigate('Saved')}
                 />
               ),
               hidesSharedBackground: true,
@@ -74,8 +77,42 @@ function Library() {
         })}
       />
       <Stack.Screen
-        name="Favorites"
-        component={FavoritesScreen}
+        name="Saved"
+        component={SavedScreen}
+        options={({ navigation }) => ({
+          unstable_headerLeftItems: () => [
+            {
+              type: 'custom',
+              element: (
+                <IconButton
+                  icon="chevron-back"
+                  color="white"
+                  size={28}
+                  onPress={() => navigation.goBack()}
+                />
+              ),
+              hidesSharedBackground: true,
+            },
+          ],
+        })}
+      />
+    </Stack.Navigator>
+  );
+}
+
+function Chats() {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: { backgroundColor: Colors.primary500 },
+        headerTintColor: 'white',
+        contentStyle: { backgroundColor: Colors.primary100 },
+      }}
+    >
+      <Stack.Screen name="Chats" component={ChatsScreen} />
+      <Stack.Screen
+        name="Chat"
+        component={ChatScreen}
         options={({ navigation }) => ({
           unstable_headerLeftItems: () => [
             {
@@ -196,6 +233,28 @@ function Account() {
           headerShown: false,
         }}
       />
+      <Stack.Screen
+        name="Favorites"
+        component={FavoritesScreen}
+        options={({ navigation }) => ({
+          title: 'Favorites',
+          headerLeftBackgroundVisible: false,
+          unstable_headerLeftItems: () => [
+            {
+              type: 'custom',
+              element: (
+                <IconButton
+                  icon="chevron-back"
+                  color="white"
+                  size={28}
+                  onPress={() => navigation.goBack()}
+                />
+              ),
+              hidesSharedBackground: true,
+            },
+          ],
+        })}
+      />
     </Stack.Navigator>
   );
 }
@@ -279,29 +338,26 @@ function AuthenticatedStack() {
           }}
         />
         <BottomTabs.Screen
-          name="MyLibrary"
-          component={Library}
+          name="Search"
+          component={Search}
           options={{
-            title: 'My Library',
+            title: 'Search',
             tabBarIcon: ({ color, size }) => (
-              <Ionicons name="calendar" size={32} color={color} />
+              <Ionicons name="search" size={32} color={color} />
             ),
             headerShown: false,
           }}
         />
         <BottomTabs.Screen
-          name="ChatSupport"
-          component={ChatScreen}
-          options={({ navigation }) => ({
-            title: 'Support',
+          name="Chats"
+          component={Chats}
+          options={{
+            title: 'Chats',
             tabBarIcon: ({ color, size }) => (
-              <Ionicons
-                name="chatbubble-ellipses-outline"
-                size={32}
-                color={color}
-              />
+              <Ionicons name="send" size={32} color={color} />
             ),
-          })}
+            headerShown: false,
+          }}
         />
         <BottomTabs.Screen
           name="Account"
